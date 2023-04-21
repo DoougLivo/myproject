@@ -16,6 +16,7 @@ import com.assignment.choi.domain.DepDto;
 import com.assignment.choi.domain.HobbyDto;
 import com.assignment.choi.domain.UserDto;
 import com.assignment.choi.domain.UserHDto;
+import com.assignment.choi.domain.UserHDtoPK;
 import com.assignment.choi.service.UserService;
 
 @Controller
@@ -90,7 +91,9 @@ public class UserController {
 					// 사용자 취미 추가
 					userService.insertHobby(newUHDto);
 				}
-			}
+			} /*else if(h_code_id == "") {
+				userService.insertHobby("1");
+			}*/
 			
 			map.put("msg", "success");
 			map.put("ok", "승인 요청 되었습니다.");
@@ -205,11 +208,13 @@ public class UserController {
 	// 사용자 정보 수정
 	@ResponseBody
 	@PostMapping("/admin/update")
-	Map<String, String> updateUser(UserDto dto, UserHDto hDto, String h_code_id) {
+	Map<String, String> updateUser(UserDto dto, UserHDto hDto, String h_code_id, UserHDtoPK pk) {
 		Map<String, String> map = new HashMap<String, String>();
 		try {
-			// 사용자 정보 수정
-			userService.updateUser(dto);
+			if(h_code_id == "") {
+				// 사용자 정보 수정
+				userService.updateUser(dto);
+			}
 			
 			// 취미 수정
 			if (h_code_id != "") {
@@ -217,6 +222,18 @@ public class UserController {
 				UserHDto newUHDto = new UserHDto();
 				HobbyDto newH_Dto = new HobbyDto();
 				UserDto newU_Dto = new UserDto();
+				UserHDtoPK newUHPK = new UserHDtoPK();
+				
+				// 취미 삭제
+				System.out.println("pk1--------------------------- : "+pk);
+				newUHPK.setUser_id(dto.getUser_id());
+			// 여기까지 했다
+				
+				pk.setUser_id(dto.getUser_id());
+				pk.getUserDto().setUser_id(pk.getUser_id());
+				System.out.println("pk2------------------------------: "+pk);
+				userService.deleteHobby(pk);
+				
 				if (h_code_id.contains(",")) {
 					String[] hic = h_code_id.split(",");
 
@@ -235,7 +252,8 @@ public class UserController {
 						newUHDto.setUserDto(newU_Dto);
 
 						// 사용자 취미 수정
-						userService.updateUserHobby(dto.getUser_id(), newUHDto);
+						userService.insertHobby(newUHDto);
+//						userService.updateUserHobby(dto.getUser_id(), newUHDto);
 					}
 				} else {
 					// 임시 변수
@@ -252,7 +270,8 @@ public class UserController {
 					newUHDto.setUserDto(newU_Dto);
 
 					// 사용자 취미 수정
-					userService.updateUserHobby(dto.getUser_id(), newUHDto);
+					userService.insertHobby(newUHDto);
+//					userService.updateUserHobby(dto.getUser_id(), newUHDto);
 				}
 			}
 			
@@ -273,10 +292,11 @@ public class UserController {
 		System.out.println("아이디 : " + dto.getUser_id());
 		System.out.println("부서 : " + dto.getDepDto().getDep_id());
 		try {
-			userService.deleteHobby(dto);
+			userService.deleteUser(dto);
+
+			//userService.deleteHobby(dto);
 			System.out.println("취미 삭제됨(유저 널)");
 			
-			userService.deleteUser(dto);
 			map.put("msg", "success");
 			map.put("msg2", "삭제되었습니다.");
 		} catch (Exception e) {

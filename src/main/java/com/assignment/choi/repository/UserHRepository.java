@@ -7,8 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.assignment.choi.domain.UserHDto;
+import com.assignment.choi.domain.UserHDtoPK;
 
-public interface UserHRepository extends JpaRepository<UserHDto, String>{
+public interface UserHRepository extends JpaRepository<UserHDto, UserHDtoPK>{
 
 	@Query("select d from UserHDto d left join d.hobbyDto h where d.userDto.user_id=:userId")
 	List<UserHDto> findByHobby(@Param("userId")String user_id);

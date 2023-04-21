@@ -9,6 +9,7 @@ import com.assignment.choi.domain.DepDto;
 import com.assignment.choi.domain.HobbyDto;
 import com.assignment.choi.domain.UserDto;
 import com.assignment.choi.domain.UserHDto;
+import com.assignment.choi.domain.UserHDtoPK;
 import com.assignment.choi.repository.HobbyRepository;
 import com.assignment.choi.repository.UserHRepository;
 import com.assignment.choi.repository.UserRepository;
@@ -55,13 +56,13 @@ public class UserService {
 		userDao.save(dto);
 	}
 	
-	public void updateUserHobby(String user_id, UserHDto hDto) {
-		userHDao.deleteById(user_id);
-		userHDao.save(hDto);
-	}
+//	public void updateUserHobby(String user_id, UserHDto hDto) {
+//		userHDao.deleteById(user_id);
+//		userHDao.save(hDto);
+//	}
 	
-	public void deleteHobby(UserDto dto) {
-		userHDao.deleteById(dto.getUser_id());
+	public void deleteHobby(UserHDtoPK dto) {
+		userHDao.deleteById(dto);
 //		userHDao.updateUserNull(dto.getUser_id());
 	}
 	
