@@ -74,12 +74,13 @@ public class UserController {
 
 						// user_id
 						newU_Dto.setUserId(hDto.getUserId());
-						System.out.println("5555555555555555");
+						System.out.println("5 "+ newU_Dto);
 						newUHDto.setUserDto(newU_Dto);
-						System.out.println("6666666666666666");
+						System.out.println("6 "+newUHDto);
 						
 						// 사용자 취미 추가
 						userService.insertHobby(newUHDto);
+						System.out.println("되어야 함");
 					}
 				} else {
 					// 임시 변수
