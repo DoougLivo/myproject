@@ -62,25 +62,18 @@ public class UserController {
 						// 임시 변수
 						System.out.println("취미코드"+ (i+1) +": "+hic[i]);
 						hDto.setH_code_id(hic[i]);
-						System.out.println("11111111111111");
 						hDto.setUserId(dto.getUserId());
-						System.out.println("2222222222222222");
 						
 						// h_code_id
 						newH_Dto.setH_code_id(hDto.getH_code_id());
-						System.out.println("3333333333333333");
 						newUHDto.setHobbyDto(newH_Dto);
-						System.out.println("4444444444444444");
 
 						// user_id
 						newU_Dto.setUserId(hDto.getUserId());
-						System.out.println("5 "+ newU_Dto);
 						newUHDto.setUserDto(newU_Dto);
-						System.out.println("6 "+newUHDto);
 						
 						// 사용자 취미 추가
 						userService.insertHobby(newUHDto);
-						System.out.println("되어야 함");
 					}
 				} else {
 					// 임시 변수
@@ -285,21 +278,15 @@ public class UserController {
 						// 임시 변수
 						System.out.println("취미코드 : " + h_code_id);
 						hDto.setH_code_id(h_code_id);
-						System.out.println("들어옴@@@@@@@@@@@@@@@");
 						hDto.setUserId(dto.getUserId());
-						System.out.println("들어옴2222222@@@@@@@@@@@@@@@");
 
 						// h_code_id
 						newH_Dto.setH_code_id(hDto.getH_code_id());
-						System.out.println("들어옴3333333333@@@@@@@@@@@@@@@");
 						newUHDto.setHobbyDto(newH_Dto);
-						System.out.println("들어옴4444444444@@@@@@@@@@@@@@@");
 						
 						// user_id
 						newU_Dto.setUserId(hDto.getUserId());
-						System.out.println("들어옴5555555555@@@@@@@@@@@@@@@");
 						newUHDto.setUserDto(newU_Dto);
-						System.out.println("들어옴6666666666@@@@@@@@@@@@@@@");
 
 						// 사용자 취미 수정
 						userService.insertHobby(newUHDto);
@@ -324,7 +311,7 @@ public class UserController {
 		System.out.println("아이디 : " + dto.getUserId());
 		System.out.println("부서 : " + dto.getDepDto().getDep_id());
 		System.out.println("취미코드 : "+h_code_id);
-		System.out.println("pk tttttttttttttttttttttttttttt : "+ pk);
+		System.out.println("pk ttttttt: "+ pk);
 		//pk.getHobbyDto().setH_code_id(h_code_id);
 		try {
 			if(h_code_id != null) {  // 취미가 있으면 
