@@ -2,7 +2,8 @@ package com.assignment.choi.domain;
 
 import java.io.Serializable;
 
-import jakarta.persistence.Transient;
+import javax.persistence.Transient;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

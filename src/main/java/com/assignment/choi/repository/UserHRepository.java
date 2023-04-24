@@ -2,13 +2,14 @@ package com.assignment.choi.repository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.assignment.choi.domain.UserHDto;
 
-import jakarta.transaction.Transactional;
 
 public interface UserHRepository extends JpaRepository<UserHDto, String>{
 
