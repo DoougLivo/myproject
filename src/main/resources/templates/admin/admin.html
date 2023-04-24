@@ -62,7 +62,7 @@ ul li {
 		<table style="width: 100%; text-align: center;">
 			<tr>
 				<td style="background-color:#F0EEED;">이름</td>
-				<td><input type="hidden" id="searchuser_id" name="user_id" value=""></td>
+				<td><input type="hidden" id="searchuser_id" name="userId" value=""></td>
 				<td><input type="text" id="searchKeyword" name="searchKeyword" style="width:98%;" placeholder="사원명을 입력하세요."></td>
 				<td><input type="submit" id="goSearch" value="검색" style="width: 100%;"></td>
 			</tr>
@@ -83,14 +83,14 @@ ul li {
 			</thead>
 			<tbody id="tbodyList">
 				<tr th:each="l : ${list}">
-					<td><a th:text="${l.user_id}" th:href="@{/admin/{user_id}(user_id = ${l.user_id})}">Id</a></td>
+					<td><a th:text="${l.userId}" th:href="@{/admin/{userId}(userId = ${l.userId})}">Id</a></td>
 					<td th:text="${l.userNm}">사원명</td>
 					<td th:text="${l.depDto.dep_nm}">부서</td>
 					<td th:if="${l.signYn}=='N'">승인요청</td>
 					<td th:if="${l.signYn}=='Y'">승인</td>
 				</tr>
 				<tr th:each="sl : ${searchList}">
-					<td id="listId"><a th:text="${sl.user_id}" th:href="@{/admin(searchKeyword=${searchKeyword},user_id=${sl.user_id})}">Id</a></td>
+					<td id="listId"><a th:text="${sl.userId}" th:href="@{/admin(searchKeyword=${searchKeyword},userId=${sl.userId})}">Id</a></td>
 					<td th:text="${sl.userNm}">사원명</td>
 					<td th:text="${sl.depDto.dep_nm}">부서</td>
 					<td th:if="${sl.signYn}=='N'">승인요청</td>
@@ -106,7 +106,7 @@ ul li {
 <!-- 					<a th:href="@{/admin(page=${pageStat.index})}" th:text="${pageStat.index + 1}"></a>      			 -->
 <!-- 					</th:block> -->
 <!-- 					<th:block th:if="${userId}!=null"> -->
-<!-- 					<a th:href="@{/admin/user_id(page=${pageStat.index})}" th:text="${pageStat.index + 1}"></a>      			 -->
+<!-- 					<a th:href="@{/admin/userId(page=${pageStat.index})}" th:text="${pageStat.index + 1}"></a>      			 -->
 <!-- 					</th:block> -->
 <!--       			</li> -->
 <!--       		</ul> -->
@@ -120,8 +120,8 @@ ul li {
 			<th:block th:if="${view}!=null">
 			<tbody>
 				<tr>
-					<td style="background-color:#F0EEED;"><label for="user_id" >ID</label></td>
-					<td><input type="text" id="user_id" name="user_id" style="width:95%" th:value="${view.user_id}" readonly></td>
+					<td style="background-color:#F0EEED;"><label for="userId" >ID</label></td>
+					<td><input type="text" id="userId" name="userId" style="width:95%" th:value="${view.userId}" readonly></td>
 				</tr>
 				<tr>
 					<td style="background-color:#F0EEED;"><label for="userNm">사원명</label></td>
@@ -184,7 +184,7 @@ $(()=>{
 	// 저장
 	$("#btnSave").click(()=>{
 		let frm = $("#adminform").serialize();
-		let user_id = $("#user_id").val();
+		let userId = $("#userId").val();
 		let signYn = $("#signYn").val();
 		let h_code_id = $("#h_code_id").val();
 		
@@ -198,7 +198,7 @@ $(()=>{
 			console.log(res);
 			if(res.msg=='success') {
 				alert(res.msg2);
-				location.href="/admin/"+user_id;
+				location.href="/admin/"+userId;
 			} else{
 				alert("실패");
 			}

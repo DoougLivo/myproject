@@ -68,8 +68,8 @@ th {
 		</thead>
 		<tbody>
 			<tr>
-				<td style="background-color:#F0EEED;"><label for="user_id">ID</label></td>
-				<td><input type="text" id="user_id" name="user_id" style="width:77%" placeholder="아이디를 입력하세요.">
+				<td style="background-color:#F0EEED;"><label for="userId">ID</label></td>
+				<td><input type="text" id="userId" name="userId" style="width:77%" placeholder="아이디를 입력하세요.">
 					<button type="button" class="btn btn-primary btn-ghost btn-open-line" id="idcheck" style="float: right; height: 22px;">check</button>
 					<input type="hidden" id="idcheck_yn" value="N"></td>
 			</tr>
@@ -119,22 +119,22 @@ th {
 <script>
 $(()=>{
 	$("#btnUser").click(()=>{
-		let user_id = $("#user_id").val().trim();
+		let userId = $("#userId").val().trim();
 		let userNm = $("#userNm").val().trim();
 		let user_email = $("#user_email").val().trim();
 		let idcheck_yn = $("#idcheck_yn").val();
 		let frm = $("#userform").serialize();
 		
-		console.log(user_id);
+		console.log(userId);
 		console.log(userNm);
 		console.log(user_email);
 		console.log(idcheck_yn);
 		console.log(frm);
 		
 		// nullCheck
-		if(user_id=="") {
+		if(userId=="") {
 			alert("아이디를 입력하세요");
-			$("#user_id").focus();
+			$("#userId").focus();
 			return;
 		}
 		if(userNm=="") {
@@ -172,15 +172,15 @@ $(()=>{
 	
 	// 아이디 중복 체크
 	$("#idcheck").click(()=>{
-		let user_id = $("#user_id").val();
-		if(user_id == "") {
+		let userId = $("#userId").val();
+		if(userId == "") {
 			alert("아이디를 입력하세요");
-			$("#user_id").focus();
+			$("#userId").focus();
 			return;
 		}
 		$.ajax({
 			url:"/idcheck",
-			data:{user_id:user_id},
+			data:{userId:userId},
 			dataType:"json",
 			method:"post"
 		})
@@ -188,11 +188,11 @@ $(()=>{
 			console.log(res);
 			if(res.msg=="success") {
 				alert(res.use);
-				$("#user_id").prop("readonly", true);	
+				$("#userId").prop("readonly", true);	
 				$("#idcheck_yn").val("Y");
 			} else {
 				alert(res.use);
-				$("#user_id").focus();
+				$("#userId").focus();
 			}
 		})
 		.fail((res, status, error)=>{
