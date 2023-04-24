@@ -29,49 +29,42 @@ public class UserService {
 		userDao.save(dto);
 	}
 	
-	public void insertHobby(UserHDto hDto) {
-		userHDao.save(hDto);
-	}
-	
 	public List<UserDto> getList() {
 //		return userDao.findAll(PageRequest.of(page, 10, Sort.by(Sort.Direction.ASC, "signYn")));
 		return userDao.findAll();
 	}
 	
-	public List<UserHDto> getHobby(String user_id) {
-		System.out.println("취미 갯수 : "+ userHDao.findByHobby(user_id));
-		System.out.println("투스트링: "+userHDao.findByHobby(user_id).toString());
-		return userHDao.findByHobby(user_id);
+	public UserDto getView(String userId) {
+		UserDto dto = userDao.findByUserDto(userId);
+		System.out.println("dto : "+dto);
+		return dto;
+	}
+	
+	public List<UserHDto> getHobby(String userId) {
+		List<UserHDto> list = userHDao.findByHobby(userId);
+//		System.out.println(userHDao.findByHobby(userId));  // 두번 이상 되면 에러
+		System.out.println("toString : "+ list);
+		return list;
 	}
 	
 	public List<HobbyDto> getHobbyList() {
 		return hobbyDao.findAllOrderByAsc();
 	}
 	
-	public UserDto getView(String user_id) {
-		return userDao.findByDto(user_id);
+	public void insertHobby(UserHDto hDto) {
+		userHDao.save(hDto);
 	}
 	
+	public void deleteHobby(UserHDtoPK pk) {
+		userHDao.deleteByUserDto_UserId(pk.getUserId());
+	}
+
 	public void updateUser(UserDto dto) {
 		userDao.save(dto);
 	}
 	
-//	public void updateUserHobby(String user_id, UserHDto hDto) {
-//		userHDao.deleteById(user_id);
-//		userHDao.save(hDto);
-//	}
-	
-	public void deleteHobby(UserHDtoPK dto) {
-		userHDao.deleteById(dto);
-//		userHDao.updateUserNull(dto.getUser_id());
-	}
-	
 	public void deleteUser(UserDto dto) {
-		userDao.deleteById(dto.getUser_id());
-	}
-	
-	public List<DepDto> getDepList() {
-		return userDao.findByDto();
+		userDao.deleteById(dto.getUserId());
 	}
 	
 	public List<UserDto> searchUser(String searchKeyword) {
@@ -79,8 +72,12 @@ public class UserService {
 		return userDao.findByUserNmContaining(searchKeyword);
 	}
 	
-	public int idCheck(String user_id) {
-		int result = userDao.findByUserId(user_id);
+	public List<DepDto> getDepList() {
+		return userDao.findByDto();
+	}
+	
+	public int idCheck(String userId) {
+		int result = userDao.findByUserId(userId);
 		if(result == 0) {
 			return 0; //사용가능
 		} else {

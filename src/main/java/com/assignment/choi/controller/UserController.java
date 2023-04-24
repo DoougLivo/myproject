@@ -47,28 +47,29 @@ public class UserController {
 		try {
 			// 사용자 추가
 			userService.insert(dto);
-			
-			// 취미 등록
-			if(h_code_id != "") {
+
+			if(h_code_id != null) {
+				// 취미 등록
 				// 임시로 저장하기 위해 만듬
 				UserHDto newUHDto = new UserHDto();
 				HobbyDto newH_Dto = new HobbyDto();
 				UserDto newU_Dto = new UserDto();
+				System.out.println("전체 취미코드 : " + h_code_id);
 				if(h_code_id.contains(",")) {
 					String[] hic = h_code_id.split(",");
 					
 					for(int i=0; i<hic.length; i++) {
 						// 임시 변수
-						System.out.println("취미코드:"+hic[i]);
+						System.out.println("취미코드"+ (i+1) +": "+hic[i]);
 						hDto.setH_code_id(hic[i]);
-						hDto.setUser_id(dto.getUser_id());
+						hDto.setUserId(dto.getUserId());
 						
 						// h_code_id
 						newH_Dto.setH_code_id(hDto.getH_code_id());
 						newUHDto.setHobbyDto(newH_Dto);
 
 						// user_id
-						newU_Dto.setUser_id(hDto.getUser_id());
+						newU_Dto.setUserId(hDto.getUserId());
 						newUHDto.setUserDto(newU_Dto);
 						
 						// 사용자 취미 추가
@@ -78,22 +79,20 @@ public class UserController {
 					// 임시 변수
 					System.out.println(h_code_id);
 					hDto.setH_code_id(h_code_id);
-					hDto.setUser_id(dto.getUser_id());
+					hDto.setUserId(dto.getUserId());
 					
 					// h_code_id
 					newH_Dto.setH_code_id(hDto.getH_code_id());
 					newUHDto.setHobbyDto(newH_Dto);
 
 					// user_id
-					newU_Dto.setUser_id(hDto.getUser_id());
+					newU_Dto.setUserId(hDto.getUserId());
 					newUHDto.setUserDto(newU_Dto);
 					
 					// 사용자 취미 추가
 					userService.insertHobby(newUHDto);
 				}
-			} /*else if(h_code_id == "") {
-				userService.insertHobby("1");
-			}*/
+			}
 			
 			map.put("msg", "success");
 			map.put("ok", "승인 요청 되었습니다.");
@@ -106,9 +105,9 @@ public class UserController {
 	
 	// 관리자 포털
 	@GetMapping("/admin")
-	String getList(Model model, String searchKeyword, String user_id/*, @RequestParam(required = false, defaultValue = "0", value = "page") int page*/) {
+	String getList(Model model, String searchKeyword, String userId/*, @RequestParam(required = false, defaultValue = "0", value = "page") int page*/) {
 		// 목록
-		if(searchKeyword == null) {
+		if(searchKeyword == null) {  //검색 안했을 때
 			// 페이지 0부터 시작
 			List<UserDto> list = userService.getList();
 			
@@ -120,15 +119,36 @@ public class UserController {
 //			model.addAttribute("totalPage", totalPage);
 			
 //			model.addAttribute("userId", user_id);
-		} else {
+			
+			//검색 안했을 때
+			
+			// 부서 목록
+			List<DepDto> depList = userService.getDepList();
+			model.addAttribute("depList", depList);
+			// 취미 목록
+			List<HobbyDto> getHobbyList = userService.getHobbyList();
+			model.addAttribute("getHobbyList", getHobbyList);
+			System.out.println("취미목록 : "+ getHobbyList.size());
+			// 사용자 취미
+			List<UserHDto> viewHList = userService.getHobby(userId);
+			System.out.println("취미리스트 갯수 : " + viewHList.size());
+			// 나눠서 저장
+			String hci="";
+			for(int i=0; i < viewHList.size(); i++) {
+				hci += viewHList.get(i).getHobbyDto().getH_code_id();
+			} // viewHList1   viewHList2  
+			model.addAttribute("hci", hci);
+			System.out.println("hci : "+ hci);
+		} else {  //검색 했을 때
+			String searchKeyword_no_s = searchKeyword.replaceAll("\\s", ""); // 공백 제거
 			// 검색 목록
-			List<UserDto> searchList = userService.searchUser(searchKeyword);
+			List<UserDto> searchList = userService.searchUser(searchKeyword_no_s);
 			
 //			int totalPage = searchList.getTotalPages();
 			
-			model.addAttribute("searchKeyword", searchKeyword);
-			System.out.println("이름 : "+ searchKeyword);
-			System.out.println("갯수 : " + searchList.size());
+			model.addAttribute("searchKeyword", searchKeyword_no_s);
+			System.out.println("키워드명 : "+ searchKeyword_no_s);
+			System.out.println("검색된 목록 갯수 : " + searchList.size());
 			model.addAttribute("searchList", searchList);
 //			model.addAttribute("searchList", searchList.getContent());
 //			model.addAttribute("totalPage", totalPage);
@@ -136,17 +156,20 @@ public class UserController {
 //			model.addAttribute("userId", user_id);
 			
 			// 사용자 정보
-			if(user_id != "") {
+			if(userId != "") {  //상세정보 눌렀을 때
 				// 사용자 부서
-				UserDto view = userService.getView(user_id);
+				UserDto view = userService.getView(userId);
 				model.addAttribute("view", view);
 				System.out.println("부서 : " + view.getDepDto().getDep_id());
+				// 부서 목록
+				List<DepDto> depList = userService.getDepList();
+				model.addAttribute("depList", depList);
 				// 취미 목록
 				List<HobbyDto> getHobbyList = userService.getHobbyList();
 				model.addAttribute("getHobbyList", getHobbyList);
 				System.out.println("취미목록 : "+ getHobbyList.size());
 				// 사용자 취미
-				List<UserHDto> viewHList = userService.getHobby(user_id);
+				List<UserHDto> viewHList = userService.getHobby(userId);
 				System.out.println("취미리스트 갯수 : " + viewHList.size());
 				// 나눠서 저장
 				String hci="";
@@ -157,17 +180,13 @@ public class UserController {
 				System.out.println("hci : "+ hci);
 			}
 		}
-		
-		// 부서 목록
-		List<DepDto> depList = userService.getDepList();
-		model.addAttribute("depList", depList);
-		
+
 		return "admin/admin";
 	}
 	
 	// 관리자 포털 상세보기
-	@GetMapping("/admin/{user_id}")
-	String getView(Model model, @PathVariable("user_id")String user_id, String searchKeyword/*, @RequestParam(required = false, defaultValue = "0", value = "page") int page*/) {
+	@GetMapping("/admin/{userId}")
+	String getView(Model model, @PathVariable("userId")String userId, String searchKeyword/*, @RequestParam(required = false, defaultValue = "0", value = "page") int page*/) {
 		// 목록
 		List<UserDto> list = userService.getList();
 		
@@ -180,7 +199,7 @@ public class UserController {
 //		model.addAttribute("userId", user_id);
 		
 		// 사용자 정보
-		UserDto view = userService.getView(user_id);
+		UserDto view = userService.getView(userId);
 		model.addAttribute("view", view);
 		System.out.println("부서 : " + view.getDepDto().getDep_id());
 		// 취미 목록
@@ -188,9 +207,9 @@ public class UserController {
 		model.addAttribute("getHobbyList", getHobbyList);
 		System.out.println("취미목록 : "+ getHobbyList.size());
 		// 사용자 취미
-		List<UserHDto> viewHList = userService.getHobby(user_id);
+		List<UserHDto> viewHList = userService.getHobby(userId);
 		System.out.println("취미리스트 갯수 : " + viewHList.size());
-		// 나눠서 저장
+		// 나눠서 저장, 상세정보에 취미 불러올때 필요함
 		String hci="";
 		for(int i=0; i < viewHList.size(); i++) {
 			hci += viewHList.get(i).getHobbyDto().getH_code_id();
@@ -211,44 +230,44 @@ public class UserController {
 	Map<String, String> updateUser(UserDto dto, UserHDto hDto, String h_code_id, UserHDtoPK pk) {
 		Map<String, String> map = new HashMap<String, String>();
 		try {
-			if(h_code_id == "") {
-				// 사용자 정보 수정
-				userService.updateUser(dto);
+			// 사용자 정보 수정
+			userService.updateUser(dto);
+			
+			if(h_code_id == null) {
+				// 취미 삭제
+				userService.deleteHobby(pk);
+				System.out.println("취미 삭제됨");
 			}
 			
 			// 취미 수정
-			if (h_code_id != "") {
+			if (h_code_id != null) {  // 취미가 있으면
+				// 취미 삭제
+				userService.deleteHobby(pk);
+				System.out.println("취미 삭제됨");
+				
+//				System.out.println("취미코드 : "+h_code_id);
+//				System.out.println("@@@@@@@@@@@@ hDto : "+hDto);
+				
 				// 임시로 저장하기 위해 만듬
 				UserHDto newUHDto = new UserHDto();
 				HobbyDto newH_Dto = new HobbyDto();
 				UserDto newU_Dto = new UserDto();
-				UserHDtoPK newUHPK = new UserHDtoPK();
-				
-				// 취미 삭제
-				System.out.println("pk1--------------------------- : "+pk);
-				newUHPK.setUser_id(dto.getUser_id());
-			// 여기까지 했다
-				
-				pk.setUser_id(dto.getUser_id());
-				pk.getUserDto().setUser_id(pk.getUser_id());
-				System.out.println("pk2------------------------------: "+pk);
-				userService.deleteHobby(pk);
-				
+
 				if (h_code_id.contains(",")) {
 					String[] hic = h_code_id.split(",");
 
 					for (int i = 0; i < hic.length; i++) {
 						// 임시 변수
-						System.out.println("취미코드:" + hic[i]);
+						System.out.println("취미코드 : " + hic[i]);
 						hDto.setH_code_id(hic[i]);
-						hDto.setUser_id(dto.getUser_id());
+						hDto.setUserId(dto.getUserId());
 
 						// h_code_id
 						newH_Dto.setH_code_id(hDto.getH_code_id());
 						newUHDto.setHobbyDto(newH_Dto);
 
 						// user_id
-						newU_Dto.setUser_id(hDto.getUser_id());
+						newU_Dto.setUserId(hDto.getUserId());
 						newUHDto.setUserDto(newU_Dto);
 
 						// 사용자 취미 수정
@@ -257,16 +276,16 @@ public class UserController {
 					}
 				} else {
 					// 임시 변수
-					System.out.println(h_code_id);
+					System.out.println("취미코드 : " + h_code_id);
 					hDto.setH_code_id(h_code_id);
-					hDto.setUser_id(dto.getUser_id());
+					hDto.setUserId(dto.getUserId());
 
 					// h_code_id
 					newH_Dto.setH_code_id(hDto.getH_code_id());
 					newUHDto.setHobbyDto(newH_Dto);
 
 					// user_id
-					newU_Dto.setUser_id(hDto.getUser_id());
+					newU_Dto.setUserId(hDto.getUserId());
 					newUHDto.setUserDto(newU_Dto);
 
 					// 사용자 취미 수정
@@ -287,15 +306,22 @@ public class UserController {
 	// 사용자 삭제
 	@ResponseBody
 	@PostMapping("/admin/delete")
-	Map<String, String> deleteUser(UserDto dto) {
+	Map<String, String> deleteUser(UserDto dto, UserHDtoPK pk, String h_code_id) {
 		Map<String, String> map = new HashMap<String, String>();
-		System.out.println("아이디 : " + dto.getUser_id());
+		System.out.println("아이디 : " + dto.getUserId());
 		System.out.println("부서 : " + dto.getDepDto().getDep_id());
+		System.out.println("취미코드 : "+h_code_id);
+		System.out.println("pk tttttttttttttttttttttttttttt : "+ pk);
+		//pk.getHobbyDto().setH_code_id(h_code_id);
 		try {
-			userService.deleteUser(dto);
+			if(h_code_id != null) {  // 취미가 있으면 
+				// 취미 삭제
+				userService.deleteHobby(pk);
+				System.out.println("취미 삭제됨");
+			}
 
-			//userService.deleteHobby(dto);
-			System.out.println("취미 삭제됨(유저 널)");
+			// 사용자 삭제
+			userService.deleteUser(dto);
 			
 			map.put("msg", "success");
 			map.put("msg2", "삭제되었습니다.");
@@ -309,10 +335,10 @@ public class UserController {
 	// 아이디 중복체크
 	@ResponseBody
 	@PostMapping("/idcheck")
-	Map<String, String> idCheck(String user_id) {
+	Map<String, String> idCheck(String userId) {
 		Map<String, String> map = new HashMap<String, String>();
 		try {
-			int result = userService.idCheck(user_id);
+			int result = userService.idCheck(userId);
 			if(result == 0) {
 				map.put("msg", "success");
 				map.put("use", "사용 가능한 아이디입니다.");

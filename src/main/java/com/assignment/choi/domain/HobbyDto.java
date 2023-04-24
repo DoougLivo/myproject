@@ -19,9 +19,9 @@ import lombok.Setter;
 public class HobbyDto {
 	@Id
 	@Column(name="h_code_id")
-	private String h_code_id=""; // A
+	private String h_code_id; // A
 	
 	@Column(name="h_nm", length=40)
-	private String hNm="";   // 등산
+	private String hNm;   // 등산
 	
 }

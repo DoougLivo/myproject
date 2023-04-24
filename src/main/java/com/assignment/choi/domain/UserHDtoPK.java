@@ -2,11 +2,6 @@ package com.assignment.choi.domain;
 
 import java.io.Serializable;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,5 +27,5 @@ public class UserHDtoPK implements Serializable {
 	private UserDto userDto; // test
 	
 	@Transient
-	private String user_id="";
+	private String userId;
 }
