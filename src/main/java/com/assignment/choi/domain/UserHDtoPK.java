@@ -20,12 +20,12 @@ public class UserHDtoPK implements Serializable {
 //	@Id
 //	@ManyToOne(targetEntity=HobbyDto.class, fetch=FetchType.LAZY)
 //	@JoinColumn(name="h_code_id")
-	private HobbyDto hobbyDto; // A
+	private String hobbyDto; // A
 	
 //	@Id
 //	@ManyToOne(targetEntity=UserDto.class, fetch=FetchType.LAZY, cascade = CascadeType.REMOVE)
 //	@JoinColumn(name="user_id", insertable = false, updatable = false)
-	private UserDto userDto; // test
+	private String userDto; // test
 	
 	@Transient
 	private String userId;
