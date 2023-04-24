@@ -278,15 +278,21 @@ public class UserController {
 						// 임시 변수
 						System.out.println("취미코드 : " + h_code_id);
 						hDto.setH_code_id(h_code_id);
+						System.out.println("들어옴@@@@@@@@@@@@@@@");
 						hDto.setUserId(dto.getUserId());
+						System.out.println("들어옴2222222@@@@@@@@@@@@@@@");
 
 						// h_code_id
 						newH_Dto.setH_code_id(hDto.getH_code_id());
+						System.out.println("들어옴3333333333@@@@@@@@@@@@@@@");
 						newUHDto.setHobbyDto(newH_Dto);
-
+						System.out.println("들어옴4444444444@@@@@@@@@@@@@@@");
+						
 						// user_id
 						newU_Dto.setUserId(hDto.getUserId());
+						System.out.println("들어옴5555555555@@@@@@@@@@@@@@@");
 						newUHDto.setUserDto(newU_Dto);
+						System.out.println("들어옴6666666666@@@@@@@@@@@@@@@");
 
 						// 사용자 취미 수정
 						userService.insertHobby(newUHDto);
